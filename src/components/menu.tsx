@@ -1,67 +1,46 @@
 import React from 'react';
 import { Menu } from 'antd';
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { useParams, useHistory } from 'react-router-dom';
+import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 const { SubMenu } = Menu;
 
-export default class Sider extends React.Component {
-  handleClick = (e: any) => {
-    console.log('click ', e);
-  };
+const SideMenu = () => {
+  let history = useHistory();
+  const { page, subPage, subPage2 } = useParams<{
+    page: string;
+    subPage?: string;
+    subPage2?: string;
+  }>();
+  const handleSelect = React.useCallback((param: any) => {
+    history.push(`/main/${param.key}`);
+  }, []);
 
-  render() {
-    return (
-      <Wraper>
-        <div className="logo" />
-        <Menu
-          onClick={this.handleClick}
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="inline"
-          theme="dark"
-        >
-          <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-            <Menu.ItemGroup key="g1" title="Item 1">
-              <Menu.Item key="1">Option 1</Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
-            </Menu.ItemGroup>
-            <Menu.ItemGroup key="g2" title="Item 2">
-              <Menu.Item key="3">Option 3</Menu.Item>
-              <Menu.Item key="4">Option 4</Menu.Item>
-            </Menu.ItemGroup>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            icon={<AppstoreOutlined />}
-            title="Navigation Two"
-          >
-            <Menu.Item key="5">Option 5</Menu.Item>
-            <Menu.Item key="6">Option 6</Menu.Item>
-            <SubMenu key="sub3" title="Submenu">
-              <Menu.Item key="7">Option 7</Menu.Item>
-              <Menu.Item key="8">Option 8</Menu.Item>
-            </SubMenu>
-          </SubMenu>
-          <SubMenu
-            key="sub4"
-            icon={<SettingOutlined />}
-            title="Navigation Three"
-          >
-            <Menu.Item key="9">Option 9</Menu.Item>
-            <Menu.Item key="10">Option 10</Menu.Item>
-            <Menu.Item key="11">Option 11</Menu.Item>
-            <Menu.Item key="12">Option 12</Menu.Item>
-          </SubMenu>
-        </Menu>
-      </Wraper>
-    );
-  }
-}
+  return (
+    <Wraper>
+      <div className="logo" />
+      <Menu
+        selectedKeys={[
+          `${page}${subPage ? `/${subPage}` : ''}${
+            subPage2 ? `/${subPage2}` : ''
+          }`,
+        ]}
+        defaultOpenKeys={[page]}
+        mode="inline"
+        theme="light"
+        onClick={handleSelect}
+      >
+        <SubMenu key="sub1" icon={<AppstoreOutlined />} title="Navigation one">
+          <Menu.Item key="navigation">Option 1</Menu.Item>
+        </SubMenu>
+        <SubMenu key="sub2" icon={<SettingOutlined />} title="Navigation Two">
+          <Menu.Item key="navigation2">Option 2</Menu.Item>
+        </SubMenu>
+      </Menu>
+    </Wraper>
+  );
+};
 
 const Wraper = styled.div`
   .logo {
@@ -70,3 +49,4 @@ const Wraper = styled.div`
     background: rgba(255, 255, 255, 0.3);
   }
 `;
+export default SideMenu;
